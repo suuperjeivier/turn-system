@@ -1,15 +1,28 @@
 
 import './App.css';
-import Table from './modules/queue';
-import NewItem from './modules/new_item';
+
+
+import { Link } from "react-router-dom";
+
+
 
 function App() {
+  
+
   return (
     <div className="App">
+       <nav
+        style={{
+          borderBottom: "solid 1px",
+          paddingBottom: "1rem",
+        }}
+      >
+        <Link to="/nuevo">Nuevo turno</Link> |{" "}
+        <Link to="/turnos ">Turnos</Link>
+      </nav>
       <header className="App-header">
       <h1>HOLA</h1>
-      <Table number={4} />
-      <NewItem />
+      
       </header>
     </div>
   );
