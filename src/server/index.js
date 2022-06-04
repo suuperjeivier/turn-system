@@ -10,6 +10,11 @@ var server = http.createServer(function(request, response) {
 server.listen(8080, function() {
     console.log((new Date()) + ' Server is listening on port 8080');
 });
+// Generates unique ID for every new connection
+const getUniqueID = () => {
+    const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return s4() + s4() + '-' + s4();
+  };
 
 wsServer = new WebSocketServer({
     httpServer: server,
@@ -25,8 +30,9 @@ function originIsAllowed(origin) {
   // put logic here to detect whether the specified origin is allowed.
   return true;
 }
-
+const clients = {};
 wsServer.on('request', function(request) {
+    var userID = getUniqueID();
     if (!originIsAllowed(request.origin)) {
       // Make sure we only accept requests from an allowed origin
       request.reject();
@@ -35,11 +41,19 @@ wsServer.on('request', function(request) {
     }
     
     const connection = request.accept(null, request.origin);
+    clients[userID] = connection;
     console.log((new Date()) + ' Connection accepted.');
+    console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients));
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
+            const dataFromClient = JSON.parse(message.utf8Data);
+            const json = { number: dataFromClient.number, type: dataFromClient.type };
+            let toBeSent = JSON.stringify(json);
+            Object.keys(clients).map((client) => {
+                clients[client].sendUTF(toBeSent);                
+              });
+            //connection.sendUTF(message.utf8Data);
             
         }
         else if (message.type === 'binary') {
