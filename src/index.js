@@ -12,8 +12,7 @@ import Table from './modules/queue';
 import NewItem from './modules/new_item';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { getAnalytics } from "firebase/analytics";
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const client = new W3CWebSocket('ws://127.0.0.1:8080');
@@ -38,14 +37,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const analytics = getAnalytics(app);
+
 
 root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />} />
-      <Route path="nuevo" element={<NewItem client={client} />} />
+      <Route path="nuevo" element={<NewItem client={client} databaseApp={app} />} />
       <Route path="turnos" element={<Table client={client} />} />
     </Routes>
   </BrowserRouter>
