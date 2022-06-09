@@ -1,18 +1,23 @@
 import React from "react";
 
-import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit } from 'firebase/firestore';
 
 
 
 const NewItem = (props) => {
 
-  const db = getFirestore(props.app);
+
+  const db = getFirestore(props.databaseApp);
 
     
     async function clickHandler(e){
 
       let turnNumber = 1;
-      const querySnapshot = await getDocs(collection(db, "turns"));
+      //const querySnapshot = await getDocs(collection(db, "turns"));
+      const turnsRef = collection(db, "turns");
+      const q = query(turnsRef, orderBy("turnNumber", "desc"), limit(1));
+      console.log(q);
+      const querySnapshot = await getDocs(q);
       
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => ${doc.data().turnNumber}`);
