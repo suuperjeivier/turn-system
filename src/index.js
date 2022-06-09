@@ -12,6 +12,7 @@ import Table from './modules/queue';
 import NewItem from './modules/new_item';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { initializeApp } from 'firebase/app';
+import Caller from './modules/caller';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -45,6 +46,7 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="nuevo" element={<NewItem client={client} databaseApp={app} />} />
       <Route path="turnos" element={<Table client={client} />} />
+      <Route path="caller" element={<Caller client={client} databaseApp={app}/>} />
     </Routes>
   </BrowserRouter>
 );
